@@ -1,36 +1,199 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Command Center - Chief Excellence Officer Platform
 
-## Getting Started
+AI-powered command center for finance automation, strategic insights, and operational excellence.
 
-First, run the development server:
+## 🚀 What's Been Built
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### Foundation
+- ✅ Next.js 16 with TypeScript (strict mode)
+- ✅ Tailwind CSS v4 + shadcn/ui components
+- ✅ PostgreSQL database with Drizzle ORM
+- ✅ Complete database schema (transactions, reconciliations, AI insights, automation)
+- ✅ NextAuth.js authentication setup
+- ✅ React Query for data fetching
+- ✅ Error handling system
+- ✅ Logging infrastructure
+- ✅ API response types
+
+### Dashboard Components
+- ✅ System Status Bar (response time, uptime, AI/automation status)
+- ✅ Welcome Section with AI priorities
+- ✅ Resource Cards with trend indicators
+- ✅ Core Excellence Pillars
+- ✅ Recent Activity Feed
+- ✅ Quick Actions Panel
+
+### Database Schema
+- Users & Authentication (NextAuth)
+- QuickBooks Connections
+- Transactions (QuickBooks)
+- Bank Transactions
+- Reconciliations with health scoring
+- Matched Transactions with confidence scores
+- AI Insights (anomalies, recommendations, predictions)
+- Automation Workflows & Runs
+- Anomalies Tracking
+- Predictions Storage
+- Strategic Metrics
+
+## 📁 Project Structure
+
+```
+command-center/
+├── src/
+│   ├── app/
+│   │   ├── api/
+│   │   │   └── auth/[...nextauth]/  # NextAuth routes
+│   │   ├── dashboard/               # Dashboard page
+│   │   ├── layout.tsx               # Root layout
+│   │   └── page.tsx                 # Landing page
+│   ├── components/
+│   │   ├── dashboard/               # Dashboard components
+│   │   └── ui/                      # shadcn/ui components
+│   ├── lib/
+│   │   ├── infrastructure/
+│   │   │   ├── auth/                # Auth configuration
+│   │   │   └── db/                 # Database config & schema
+│   │   └── shared/                  # Shared utilities
+│   │       ├── errors/              # Error classes
+│   │       ├── utils/               # Logger
+│   │       ├── types/               # API types
+│   │       └── constants/           # Constants
+│   ├── providers/
+│   │   └── query-provider.tsx       # React Query provider
+│   └── types/
+│       └── next-auth.d.ts           # NextAuth type definitions
+├── drizzle.config.ts                # Drizzle configuration
+└── .env.example                     # Environment variables template
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠️ Setup
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. **Set up environment variables:**
+   ```bash
+   cp .env.example .env.local
+   ```
+   Edit `.env.local` with your configuration:
+   - `DATABASE_URL` - PostgreSQL connection string
+   - `NEXTAUTH_SECRET` - Random secret for NextAuth
+   - `NEXTAUTH_URL` - Your app URL (http://localhost:3000 for dev)
 
-## Learn More
+3. **Set up database:**
+   ```bash
+   # Generate migrations
+   npm run db:generate
 
-To learn more about Next.js, take a look at the following resources:
+   # Push schema to database
+   npm run db:push
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   # Or use migrations
+   npm run db:migrate
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+4. **Run development server:**
+   ```bash
+   npm run dev
+   ```
 
-## Deploy on Vercel
+5. **Open in browser:**
+   ```
+   http://localhost:3000
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📝 Available Scripts
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
+- `npm run db:generate` - Generate database migrations
+- `npm run db:push` - Push schema changes to database
+- `npm run db:migrate` - Run database migrations
+- `npm run db:studio` - Open Drizzle Studio
+
+## 🎯 Next Steps
+
+1. **QuickBooks Integration**
+   - OAuth 2.0 flow
+   - API client wrapper
+   - Sync functionality
+
+2. **Bank Statement Processing**
+   - File upload endpoint
+   - CSV/OFX parsers
+   - Transaction normalization
+
+3. **AI Integration**
+   - OpenAI/Anthropic setup
+   - Insights generation
+   - Anomaly detection
+   - Predictive analytics
+
+4. **Automation Engine**
+   - Workflow builder
+   - Scheduled tasks
+   - Event-driven triggers
+
+5. **API Routes**
+   - Metrics calculation
+   - Reconciliation endpoints
+   - System status API
+
+## 🔐 Authentication
+
+Currently using Credentials provider for development. In production, you should:
+- Implement proper password hashing (bcrypt)
+- Add OAuth providers (Google, GitHub, etc.)
+- Set up proper user registration flow
+
+## 📊 Database
+
+The database schema includes all necessary tables for:
+- User authentication
+- QuickBooks integration
+- Bank transactions
+- Reconciliation workflows
+- AI insights and predictions
+- Automation workflows
+
+## 🎨 UI Components
+
+Using shadcn/ui with:
+- Card components
+- Buttons
+- Badges
+- More components can be added with `npx shadcn@latest add [component]`
+
+## 📚 Tech Stack
+
+- **Framework:** Next.js 16 (App Router)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS v4
+- **UI Components:** shadcn/ui
+- **Database:** PostgreSQL + Drizzle ORM
+- **Authentication:** NextAuth.js
+- **Data Fetching:** React Query (TanStack Query)
+- **Validation:** Zod
+
+## 🚧 Development Status
+
+- ✅ Project foundation
+- ✅ Database schema
+- ✅ Authentication setup
+- ✅ Dashboard UI components
+- 🚧 QuickBooks integration (next)
+- 🚧 Bank statement processing (next)
+- 🚧 AI integration (next)
+- 🚧 Automation engine (next)
+
+## 📖 Documentation
+
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Drizzle ORM Documentation](https://orm.drizzle.team/)
+- [shadcn/ui Documentation](https://ui.shadcn.com/)
+- [NextAuth.js Documentation](https://next-auth.js.org/)
