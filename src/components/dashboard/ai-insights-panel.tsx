@@ -9,7 +9,7 @@ import { useEffect } from 'react';
 
 interface AIInsight {
   id: string;
-  type: 'recommendation' | 'prediction' | 'anomaly' | 'optimization';
+  type: 'recommendation' | 'prediction' | 'anomaly' | 'optimization' | 'profitability' | 'expense' | 'trend';
   category: string;
   title: string;
   description: string;
@@ -23,7 +23,7 @@ export function AIInsightsPanel() {
   const { data, isLoading, refetch } = useQuery<{ data: AIInsight[] }>({
     queryKey: ['ai-insights'],
     queryFn: async () => {
-      const response = await fetch('/api/ai/insights?limit=5');
+      const response = await fetch('/api/ai/insights?limit=10');
       if (!response.ok) throw new Error('Failed to fetch insights');
       return response.json();
     },
@@ -46,8 +46,11 @@ export function AIInsightsPanel() {
       case 'anomaly':
         return AlertTriangle;
       case 'prediction':
+      case 'trend':
         return TrendingUp;
       case 'optimization':
+      case 'profitability':
+      case 'expense':
         return Zap;
       default:
         return Sparkles;
@@ -76,14 +79,16 @@ export function AIInsightsPanel() {
   }
 
   return (
-    <Card>
+    <Card id="insights">
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>AI Insights</CardTitle>
-          <Button onClick={generateInsights} size="sm" variant="outline">
-            <Sparkles className="mr-2 h-4 w-4" />
-            Generate
-          </Button>
+          <div className="flex gap-2">
+            <Button onClick={generateInsights} size="sm" variant="outline">
+              <Sparkles className="mr-2 h-4 w-4" />
+              Generate
+            </Button>
+          </div>
         </div>
       </CardHeader>
       <CardContent>

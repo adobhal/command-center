@@ -5,6 +5,7 @@ import { QuickBooksSyncService } from '@/lib/infrastructure/quickbooks/sync';
 import { db } from '@/lib/infrastructure/db';
 import { quickbooksConnections } from '@/lib/infrastructure/db/schema';
 import { eq } from 'drizzle-orm';
+import { slackNotifications } from '@/lib/infrastructure/slack/notifications';
 
 export async function POST(request: Request) {
   try {
@@ -48,6 +49,13 @@ export async function POST(request: Request) {
       connectionId,
       startDate: start,
       endDate: end,
+    });
+
+    // Send Slack notification
+    await slackNotifications.notifyQuickBooksSync({
+      synced: result.synced,
+      errors: result.errors,
+      companyName: connection.companyName,
     });
 
     return NextResponse.json({

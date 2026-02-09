@@ -4,6 +4,7 @@ import { authOptions } from '@/lib/infrastructure/auth/config';
 import { AnomalyDetector } from '@/lib/infrastructure/ai/anomaly-detector';
 import { db } from '@/lib/infrastructure/db';
 import { aiInsights } from '@/lib/infrastructure/db/schema';
+import { slackNotifications } from '@/lib/infrastructure/slack/notifications';
 
 export async function POST(request: Request) {
   try {
@@ -26,14 +27,14 @@ export async function POST(request: Request) {
       endDate ? new Date(endDate) : undefined
     );
 
-    // Store anomalies as insights
+    // Store anomalies as insights and send to Slack
     for (const anomaly of anomalies) {
       await db.insert(aiInsights).values({
         type: 'anomaly',
         category: 'finance',
         title: anomaly.title,
         description: anomaly.description,
-        priority: anomaly.severity === 'critical' ? 10 : anomaly.severity === 'high' ? 8 : 5, // integer is correct
+        priority: anomaly.severity === 'critical' ? 10 : anomaly.severity === 'high' ? 8 : 5,
         actionable: true,
         confidence: '0.8',
         metadata: {
@@ -43,6 +44,11 @@ export async function POST(request: Request) {
           ...anomaly.metadata,
         },
       });
+
+      // Send critical/high severity anomalies to Slack
+      if (anomaly.severity === 'critical' || anomaly.severity === 'high') {
+        await slackNotifications.notifyAnomaly(anomaly);
+      }
     }
 
     return NextResponse.json({

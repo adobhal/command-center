@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Clock, Upload, CheckCircle2, Sparkles, RefreshCw, Loader2 } from 'lucide-react';
 import { useRecentActivity, ActivityItem } from '@/hooks/use-recent-activity';
+import Link from 'next/link';
 
 const activityIcons = {
   sync: RefreshCw,
@@ -19,6 +20,14 @@ const activityColors = {
   reconciliation: 'bg-purple-100 text-purple-700 dark:bg-purple-950 dark:text-purple-300',
   ai: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-950 dark:text-yellow-300',
   automation: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300',
+};
+
+const activityLinks: { [key: string]: string } = {
+  sync: '/quickbooks/connect',
+  upload: '/bank-statements/upload',
+  reconciliation: '/reconciliation',
+  ai: '/dashboard#insights',
+  automation: '/dashboard',
 };
 
 export function RecentActivity() {
@@ -62,18 +71,28 @@ export function RecentActivity() {
         <div className="space-y-4">
           {activities.map((activity) => {
             const Icon = activityIcons[activity.type];
+            const href = activityLinks[activity.type];
+            const ActivityWrapper = href ? Link : 'div';
+            const wrapperProps = href ? { href, className: 'block' } : { className: 'block' };
+
             return (
-              <div key={activity.id} className="flex items-start gap-3">
+              <ActivityWrapper key={activity.id} {...wrapperProps}>
                 <div
-                  className={`flex h-8 w-8 items-center justify-center rounded-full ${activityColors[activity.type]}`}
+                  className={`flex items-start gap-3 ${
+                    href ? 'cursor-pointer rounded-lg p-2 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-900' : ''
+                  }`}
                 >
-                  <Icon className="h-4 w-4" />
+                  <div
+                    className={`flex h-8 w-8 items-center justify-center rounded-full ${activityColors[activity.type]}`}
+                  >
+                    <Icon className="h-4 w-4" />
+                  </div>
+                  <div className="flex-1 space-y-1">
+                    <p className="text-sm text-zinc-900 dark:text-zinc-50">{activity.message}</p>
+                    <p className="text-xs text-zinc-500">{activity.timestamp}</p>
+                  </div>
                 </div>
-                <div className="flex-1 space-y-1">
-                  <p className="text-sm text-zinc-900 dark:text-zinc-50">{activity.message}</p>
-                  <p className="text-xs text-zinc-500">{activity.timestamp}</p>
-                </div>
-              </div>
+              </ActivityWrapper>
             );
           })}
         </div>

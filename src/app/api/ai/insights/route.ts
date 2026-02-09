@@ -4,6 +4,7 @@ import { authOptions } from '@/lib/infrastructure/auth/config';
 import { InsightsGenerator } from '@/lib/infrastructure/ai/insights';
 import { db } from '@/lib/infrastructure/db';
 import { aiInsights } from '@/lib/infrastructure/db/schema';
+import { slackNotifications } from '@/lib/infrastructure/slack/notifications';
 
 export async function GET(request: Request) {
   try {
@@ -20,7 +21,7 @@ export async function GET(request: Request) {
     const limit = parseInt(searchParams.get('limit') || '10');
     const category = searchParams.get('category');
 
-    // Get stored insights
+    // Get stored insights (including P&L insights)
     const storedInsights = await db.query.aiInsights.findMany({
       where: category
         ? (insight, { eq }) => eq(insight.category, category)
@@ -59,7 +60,7 @@ export async function POST(request: Request) {
     const generator = new InsightsGenerator();
     const newInsights = await generator.generateInsights();
 
-    // Store new insights
+    // Store new insights and send high-priority ones to Slack
     for (const insight of newInsights) {
       await db.insert(aiInsights).values({
         type: insight.type,
@@ -69,9 +70,20 @@ export async function POST(request: Request) {
         priority: insight.priority,
         actionable: insight.actionable,
         actionUrl: insight.actionUrl,
-        confidence: insight.confidence.toString(), // Already a string
+        confidence: insight.confidence.toString(),
         metadata: insight.metadata,
       });
+
+      // Send high-priority insights to Slack
+      if (insight.priority >= 7) {
+        await slackNotifications.notifyAIInsight({
+          title: insight.title,
+          description: insight.description,
+          priority: insight.priority,
+          actionable: insight.actionable,
+          actionUrl: insight.actionUrl,
+        });
+      }
     }
 
     return NextResponse.json({

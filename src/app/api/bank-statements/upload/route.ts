@@ -5,6 +5,7 @@ import { BankStatementParser } from '@/lib/infrastructure/bank-statements/parser
 import { db } from '@/lib/infrastructure/db';
 import { bankTransactions } from '@/lib/infrastructure/db/schema';
 import { logger } from '@/lib/shared/utils/logger';
+import { slackNotifications } from '@/lib/infrastructure/slack/notifications';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60;
@@ -124,6 +125,14 @@ export async function POST(request: Request) {
       inserted: insertedTransactions.length,
       errors,
       userId: session.user.id,
+    });
+
+    // Send Slack notification
+    await slackNotifications.notifyBankStatementUpload({
+      filename: file.name,
+      inserted: insertedTransactions.length,
+      totalParsed: parseResult.totalParsed,
+      accountName,
     });
 
     return NextResponse.json({
