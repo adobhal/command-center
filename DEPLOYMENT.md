@@ -17,11 +17,11 @@ Vercel is the easiest way to deploy this app—zero config for Next.js.
 
 4. **Add environment variables** (Project Settings → Environment Variables):
 
-   | Variable | Required | Notes |
+   | Variable | Required | Value |
    |----------|----------|-------|
    | `NEXTAUTH_SECRET` | Yes | Generate: `openssl rand -base64 32` |
-   | `NEXTAUTH_URL` | Yes | Set after deploy: `https://your-app.vercel.app` |
-   | `DATABASE_URL` | For full features | PostgreSQL connection string |
+   | `NEXTAUTH_URL` | Yes | `https://command-center-8nwg2o2b8-adobhals-projects.vercel.app` |
+   | `DATABASE_URL` | For full features | Your Neon PostgreSQL connection string |
 
 5. **Redeploy** after setting env vars (Vercel → Deployments → ⋮ → Redeploy).
 
@@ -32,7 +32,7 @@ Vercel is the easiest way to deploy this app—zero config for Next.js.
 
 ### Your live URL
 
-After deployment: `https://command-center-xxx.vercel.app` (or your custom domain).
+Production: `https://command-center-8nwg2o2b8-adobhals-projects.vercel.app`
 
 ---
 
@@ -56,7 +56,7 @@ For full-stack with database:
 
 ## Checklist before going live
 
-- [ ] Set `NEXTAUTH_URL` to your production URL (e.g. `https://your-app.vercel.app`)
+- [ ] Set `NEXTAUTH_URL` to `https://command-center-8nwg2o2b8-adobhals-projects.vercel.app`
 - [ ] Generate a strong `NEXTAUTH_SECRET` and add it
 - [ ] Add `DATABASE_URL` if you want real data
 - [ ] Optional: Add `OPENAI_API_KEY` for AI insights
