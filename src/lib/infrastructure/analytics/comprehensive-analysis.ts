@@ -193,14 +193,14 @@ export class ComprehensiveAnalyzer {
 
     const sheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[sheetName];
-    const data = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: null });
+    const data = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: null }) as unknown[][];
 
     if (!data || data.length === 0) {
       throw new Error('P&L file is empty');
     }
 
     // Use the last column (most recent period)
-    const lastColumnIndex = data[0] ? data[0].length - 1 : 1;
+    const lastColumnIndex = data[0] ? (data[0] as unknown[]).length - 1 : 1;
     const yearData = data.map((row: any[]) => [row[0], row[lastColumnIndex]]);
 
     return await this.plParser.parseData(yearData as any[][], filePath, 1);
@@ -221,13 +221,13 @@ export class ComprehensiveAnalyzer {
 
     const sheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[sheetName];
-    const data = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: null });
+    const data = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: null }) as unknown[][];
 
     if (!data || data.length === 0) {
       return { totalAssets: 0, totalLiabilities: 0, totalEquity: 0 };
     }
 
-    const lastColumnIndex = data[0] ? data[0].length - 1 : 1;
+    const lastColumnIndex = data[0] ? (data[0] as unknown[]).length - 1 : 1;
     let totalAssets = 0;
     let totalLiabilities = 0;
     let totalEquity = 0;
@@ -266,7 +266,7 @@ export class ComprehensiveAnalyzer {
 
     const sheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[sheetName];
-    const data = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: null });
+    const data = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: null }) as unknown[][];
 
     if (!data || data.length < 2) return { cashFlow: 0, topExpenses: [] };
 
@@ -324,7 +324,7 @@ export class ComprehensiveAnalyzer {
 
     const sheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[sheetName];
-    const data = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: null });
+    const data = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: null }) as unknown[][];
 
     if (!data || data.length < 2) return { count: 0, topCustomers: [] };
 
@@ -367,7 +367,7 @@ export class ComprehensiveAnalyzer {
 
     const sheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[sheetName];
-    const data = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: null });
+    const data = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: null }) as unknown[][];
 
     if (!data || data.length < 2) return { count: 0 };
 
@@ -398,7 +398,7 @@ export class ComprehensiveAnalyzer {
 
     const sheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[sheetName];
-    const data = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: null });
+    const data = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: null }) as unknown[][];
 
     if (!data || data.length < 2) return { count: 0 };
 

@@ -93,35 +93,38 @@ export function ResourceCards() {
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {resources.map((resource) => {
-        const CardWrapper = resource.href ? Link : 'div';
-        const wrapperProps = resource.href
-          ? { href: resource.href, className: 'block' }
-          : { className: 'block' };
-
-        return (
-          <CardWrapper key={resource.title} {...wrapperProps}>
-            <Card className={resource.href ? 'cursor-pointer transition-all hover:shadow-md hover:border-zinc-300 dark:hover:border-zinc-700' : ''}>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                  {resource.title}
-                </CardTitle>
-                {resource.href && (
-                  <ArrowRight className="h-4 w-4 text-zinc-400" />
+        const cardContent = (
+          <Card className={resource.href ? 'cursor-pointer transition-all hover:shadow-md hover:border-zinc-300 dark:hover:border-zinc-700' : ''}>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                {resource.title}
+              </CardTitle>
+              {resource.href && (
+                <ArrowRight className="h-4 w-4 text-zinc-400" />
+              )}
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+                {resource.value}
+              </div>
+              <div className="mt-2 flex items-center justify-between">
+                {resource.trend !== undefined && <TrendIndicator trend={resource.trend} />}
+                {resource.trendLabel && (
+                  <p className="text-xs text-zinc-500">{resource.trendLabel}</p>
                 )}
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
-                  {resource.value}
-                </div>
-                <div className="mt-2 flex items-center justify-between">
-                  {resource.trend !== undefined && <TrendIndicator trend={resource.trend} />}
-                  {resource.trendLabel && (
-                    <p className="text-xs text-zinc-500">{resource.trendLabel}</p>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          </CardWrapper>
+              </div>
+            </CardContent>
+          </Card>
+        );
+
+        return resource.href ? (
+          <Link key={resource.title} href={resource.href} className="block">
+            {cardContent}
+          </Link>
+        ) : (
+          <div key={resource.title} className="block">
+            {cardContent}
+          </div>
         );
       })}
     </div>

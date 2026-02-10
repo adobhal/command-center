@@ -72,27 +72,32 @@ export function RecentActivity() {
           {activities.map((activity) => {
             const Icon = activityIcons[activity.type];
             const href = activityLinks[activity.type];
-            const ActivityWrapper = href ? Link : 'div';
-            const wrapperProps = href ? { href, className: 'block' } : { className: 'block' };
-
-            return (
-              <ActivityWrapper key={activity.id} {...wrapperProps}>
+            const content = (
+              <div
+                className={`flex items-start gap-3 ${
+                  href ? 'cursor-pointer rounded-lg p-2 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-900' : ''
+                }`}
+              >
                 <div
-                  className={`flex items-start gap-3 ${
-                    href ? 'cursor-pointer rounded-lg p-2 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-900' : ''
-                  }`}
+                  className={`flex h-8 w-8 items-center justify-center rounded-full ${activityColors[activity.type]}`}
                 >
-                  <div
-                    className={`flex h-8 w-8 items-center justify-center rounded-full ${activityColors[activity.type]}`}
-                  >
-                    <Icon className="h-4 w-4" />
-                  </div>
-                  <div className="flex-1 space-y-1">
-                    <p className="text-sm text-zinc-900 dark:text-zinc-50">{activity.message}</p>
-                    <p className="text-xs text-zinc-500">{activity.timestamp}</p>
-                  </div>
+                  <Icon className="h-4 w-4" />
                 </div>
-              </ActivityWrapper>
+                <div className="flex-1 space-y-1">
+                  <p className="text-sm text-zinc-900 dark:text-zinc-50">{activity.message}</p>
+                  <p className="text-xs text-zinc-500">{activity.timestamp}</p>
+                </div>
+              </div>
+            );
+
+            return href ? (
+              <Link key={activity.id} href={href} className="block">
+                {content}
+              </Link>
+            ) : (
+              <div key={activity.id} className="block">
+                {content}
+              </div>
             );
           })}
         </div>

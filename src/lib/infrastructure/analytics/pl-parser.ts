@@ -44,9 +44,9 @@ export class PLParser {
     const workbook = XLSX.readFile(filePath);
     const sheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[sheetName];
-    const data = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: null });
+    const data = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: null }) as unknown[][];
 
-    return this.parseData(data, filePath);
+    return this.parseData(data as any[][], filePath);
   }
 
   /**
@@ -56,9 +56,9 @@ export class PLParser {
     const workbook = XLSX.read(buffer, { type: 'buffer' });
     const sheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[sheetName];
-    const data = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: null });
+    const data = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: null }) as unknown[][];
 
-    return this.parseData(data, filename, yearColumnIndex);
+    return this.parseData(data as any[][], filename, yearColumnIndex);
   }
 
   /**
@@ -68,7 +68,7 @@ export class PLParser {
     const workbook = XLSX.read(buffer, { type: 'buffer' });
     const sheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[sheetName];
-    const data = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: null });
+    const data = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: null }) as unknown[][];
 
     // Find header row (usually row 4 or 5)
     let headerRowIndex = -1;
@@ -82,10 +82,10 @@ export class PLParser {
 
     if (headerRowIndex === -1) {
       // Fallback: parse as single year
-      return { 'All Years': await this.parseData(data, filename) };
+      return { 'All Years': this.parseData(data as any[][], filename) };
     }
 
-    const headerRow = data[headerRowIndex];
+    const headerRow = data[headerRowIndex] as unknown[];
     const result: { [year: string]: PLData } = {};
 
     // Parse each year column (skip first column which is labels)
@@ -93,7 +93,7 @@ export class PLParser {
       const yearLabel = String(headerRow[colIdx] || '').trim();
       if (!yearLabel || yearLabel.toLowerCase() === 'total') continue;
 
-      const yearData = await this.parseData(data, `${filename} - ${yearLabel}`, colIdx);
+      const yearData = this.parseData(data as any[][], `${filename} - ${yearLabel}`, colIdx);
       result[yearLabel] = yearData;
     }
 
