@@ -83,7 +83,7 @@ export class InsightsGenerator {
         description: `Average reconciliation health score is ${avgHealthScore.toFixed(0)}%. Consider reviewing unmatched transactions and improving matching accuracy.`,
         priority: 8,
         actionable: true,
-        actionUrl: '/reconciliation',
+        actionUrl: '/bookkeeping/reconciliation',
         confidence: 0.9,
       });
     }
@@ -100,7 +100,7 @@ export class InsightsGenerator {
         description: `${highDiscrepancyCount} recent reconciliations have discrepancies. Review these matches for accuracy.`,
         priority: 7,
         actionable: true,
-        actionUrl: '/reconciliation',
+        actionUrl: '/bookkeeping/reconciliation',
         confidence: 0.85,
       });
     }
@@ -205,7 +205,7 @@ Provide 2-3 key insights in JSON format:
         description: `Only ${automationRate.toFixed(0)}% of transactions are matched. Consider improving matching criteria or reviewing unmatched items.`,
         priority: 6,
         actionable: true,
-        actionUrl: '/reconciliation',
+        actionUrl: '/bookkeeping/reconciliation',
         confidence: 0.9,
       });
     }

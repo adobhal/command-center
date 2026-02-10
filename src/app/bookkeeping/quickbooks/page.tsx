@@ -60,8 +60,8 @@ function QuickBooksConnectContent() {
       if (!response.ok) throw new Error('Failed to get auth URL');
       const data = await response.json();
       window.location.href = data.data.authUrl;
-    } catch (err: any) {
-      setError(err.message || 'Failed to connect to QuickBooks');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to connect to QuickBooks');
       setLoading(false);
     }
   };
@@ -86,8 +86,8 @@ function QuickBooksConnectContent() {
       setSuccess(true);
       alert(`Sync completed: ${data.data.message}`);
       setLoading(false);
-    } catch (err: any) {
-      setError(err.message || 'Failed to sync');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to sync');
       setLoading(false);
     }
   };

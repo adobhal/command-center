@@ -25,16 +25,14 @@ export default function BankStatementUploadPage() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) {
-      // Validate file type
       const validExtensions = ['.csv', '.ofx', '.ofc'];
       const fileExtension = selectedFile.name.toLowerCase().substring(selectedFile.name.lastIndexOf('.'));
-      
+
       if (!validExtensions.includes(fileExtension)) {
         setError('Please upload a CSV or OFX file');
         return;
       }
 
-      // Validate file size (10MB)
       if (selectedFile.size > 10 * 1024 * 1024) {
         setError('File size must be less than 10MB');
         return;
@@ -48,7 +46,7 @@ export default function BankStatementUploadPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!file || !accountName) {
       setError('Please select a file and enter an account name');
       return;
@@ -83,7 +81,6 @@ export default function BankStatementUploadPage() {
         totalParsed: data.data.totalParsed,
       });
 
-      // Reset form
       setFile(null);
       setAccountName('');
       setAccountNumber('');
@@ -91,12 +88,11 @@ export default function BankStatementUploadPage() {
         fileInputRef.current.value = '';
       }
 
-      // Redirect to dashboard after 2 seconds
       setTimeout(() => {
-        router.push('/dashboard');
+        router.push('/bookkeeping');
       }, 2000);
-    } catch (err: any) {
-      setError(err.message || 'Failed to upload bank statement');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to upload bank statement');
     } finally {
       setUploading(false);
     }
@@ -203,7 +199,7 @@ export default function BankStatementUploadPage() {
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => router.push('/dashboard')}
+                onClick={() => router.push('/bookkeeping')}
                 disabled={uploading}
               >
                 Cancel

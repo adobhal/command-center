@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 
+type Insight = { type: string; category: string; title: string; description: string; impact: string; priority: number; recommendation: string; actionable: boolean; metrics?: unknown };
+
 // Lazy imports to avoid build-time database errors
 let ComprehensiveAnalyzer: any;
 let slackNotifications: any;
@@ -22,11 +24,11 @@ async function loadDependencies() {
       providers: [],
       session: { strategy: 'jwt' },
       callbacks: {
-        async jwt({ token, user }) {
+        async jwt({ token, user }: { token: { id?: string }; user?: { id: string } }) {
           if (user) token.id = user.id;
           return token;
         },
-        async session({ session, token }) {
+        async session({ session, token }: { session: { user?: { id?: string } }; token: { id?: string } }) {
           if (session.user) (session.user as any).id = token.id as string;
           return session;
         },
@@ -235,8 +237,8 @@ export async function POST(request: Request) {
       }
 
       // Calculate high-priority insights for summary
-      const highPriorityInsights = insights.filter((i) => i.priority >= 8);
-      const criticalInsights = insights.filter((i) => i.priority >= 9);
+      const highPriorityInsights = insights.filter((i: Insight) => i.priority >= 8);
+      const criticalInsights = insights.filter((i: Insight) => i.priority >= 9);
 
       // Send high-priority insights to Slack (don't fail if this fails)
       try {
@@ -269,7 +271,7 @@ export async function POST(request: Request) {
       return NextResponse.json({
         data: {
           metrics,
-          insights: insights.map((i) => ({
+          insights: insights.map((i: Insight) => ({
             type: i.type,
             category: i.category,
             title: i.title,

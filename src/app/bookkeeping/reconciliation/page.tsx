@@ -1,20 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import {
-  RefreshCw,
-  CheckCircle2,
-  XCircle,
-  AlertTriangle,
-  Loader2,
-  Search,
-  Download,
-} from 'lucide-react';
+import { CheckCircle2, XCircle, Loader2, Search } from 'lucide-react';
 
 interface MatchCandidate {
   bankTransactionId: string;
@@ -67,8 +59,8 @@ export default function ReconciliationPage() {
       }
 
       setResult(data.data);
-    } catch (err: any) {
-      setError(err.message || 'Failed to match transactions');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to match transactions');
     } finally {
       setMatching(false);
     }
@@ -90,10 +82,9 @@ export default function ReconciliationPage() {
       }
 
       alert(`Saved ${matches.length} matches`);
-      // Refresh results
       handleMatch();
-    } catch (err: any) {
-      alert(`Error: ${err.message}`);
+    } catch (err: unknown) {
+      alert(`Error: ${err instanceof Error ? err.message : 'Unknown error'}`);
     }
   };
 
@@ -114,8 +105,8 @@ export default function ReconciliationPage() {
 
       alert('Transactions unmatched');
       handleMatch();
-    } catch (err: any) {
-      alert(`Error: ${err.message}`);
+    } catch (err: unknown) {
+      alert(`Error: ${err instanceof Error ? err.message : 'Unknown error'}`);
     }
   };
 
@@ -278,12 +269,12 @@ export default function ReconciliationPage() {
                                 {match.matchReasons.join(', ')}
                               </span>
                             </div>
-                            {match.amountDifference && (
+                            {match.amountDifference !== undefined && (
                               <p className="text-xs text-yellow-600 dark:text-yellow-400">
                                 Amount diff: ${match.amountDifference.toFixed(2)}
                               </p>
                             )}
-                            {match.dateDifference && (
+                            {match.dateDifference !== undefined && (
                               <p className="text-xs text-yellow-600 dark:text-yellow-400">
                                 Date diff: {match.dateDifference.toFixed(1)} days
                               </p>

@@ -23,7 +23,7 @@ export function AIInsightsPanel() {
   const { data, isLoading, refetch } = useQuery<{ data: AIInsight[] }>({
     queryKey: ['ai-insights'],
     queryFn: async () => {
-      const response = await fetch('/api/ai/insights?limit=10');
+      const response = await fetch('/api/ai/insights?limit=5');
       if (!response.ok) throw new Error('Failed to fetch insights');
       return response.json();
     },
@@ -65,13 +65,13 @@ export function AIInsightsPanel() {
 
   if (isLoading) {
     return (
-      <Card>
+      <Card className="border-slate-200/80 shadow-sm dark:border-slate-700/80">
         <CardHeader>
-          <CardTitle>AI Insights</CardTitle>
+          <CardTitle className="font-semibold tracking-tight">AI Insights</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex items-center justify-center py-8">
-            <Loader2 className="h-6 w-6 animate-spin text-zinc-500" />
+            <Loader2 className="h-6 w-6 animate-spin text-slate-400" />
           </div>
         </CardContent>
       </Card>
@@ -79,12 +79,12 @@ export function AIInsightsPanel() {
   }
 
   return (
-    <Card id="insights">
+    <Card id="insights" className="border-slate-200/80 shadow-sm dark:border-slate-700/80">
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle>AI Insights</CardTitle>
+          <CardTitle className="font-semibold tracking-tight">AI Insights</CardTitle>
           <div className="flex gap-2">
-            <Button onClick={generateInsights} size="sm" variant="outline">
+            <Button onClick={generateInsights} size="sm" variant="outline" className="border-slate-200 hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800/50">
               <Sparkles className="mr-2 h-4 w-4" />
               Generate
             </Button>
@@ -94,9 +94,9 @@ export function AIInsightsPanel() {
       <CardContent>
         {insights.length === 0 ? (
           <div className="py-8 text-center">
-            <Sparkles className="mx-auto h-12 w-12 text-zinc-400" />
-            <p className="mt-2 text-sm text-zinc-500">No insights yet</p>
-            <Button onClick={generateInsights} size="sm" variant="outline" className="mt-4">
+            <Sparkles className="mx-auto h-12 w-12 text-slate-300 dark:text-slate-600" />
+            <p className="mt-2 text-sm text-slate-500">No insights yet</p>
+            <Button onClick={generateInsights} size="sm" variant="outline" className="mt-4 border-slate-200 hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800/50">
               Generate Insights
             </Button>
           </div>
@@ -107,30 +107,30 @@ export function AIInsightsPanel() {
               return (
                 <div
                   key={insight.id}
-                  className="rounded-lg border border-zinc-200 p-4 dark:border-zinc-800"
+                  className="rounded-lg border border-slate-200/80 p-4 dark:border-slate-700/80"
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex items-start gap-3 flex-1">
                       <div className="mt-0.5">
-                        <Icon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                        <Icon className="h-5 w-5 text-slate-600 dark:text-slate-400" />
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
-                          <h4 className="font-semibold text-sm text-zinc-900 dark:text-zinc-50">
+                          <h4 className="font-semibold text-sm text-slate-900 dark:text-slate-50">
                             {insight.title}
                           </h4>
-                          <Badge variant={getBadgeVariant(insight.priority)} className="text-xs">
+                          <Badge variant={getBadgeVariant(insight.priority)} className="text-xs font-medium">
                             P{insight.priority}
                           </Badge>
                         </div>
-                        <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                        <p className="text-sm text-slate-600 dark:text-slate-400">
                           {insight.description}
                         </p>
                         {insight.actionable && insight.actionUrl && (
                           <Button
                             size="sm"
                             variant="link"
-                            className="mt-2 h-auto p-0 text-xs"
+                            className="mt-2 h-auto p-0 text-xs text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-50"
                             onClick={() => {
                               window.location.href = insight.actionUrl!;
                             }}

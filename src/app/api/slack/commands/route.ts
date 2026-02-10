@@ -135,7 +135,7 @@ export async function POST(request: Request) {
                     type: 'plain_text',
                     text: 'Start Reconciliation',
                   },
-                  url: `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/reconciliation`,
+                  url: `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/bookkeeping/reconciliation`,
                 },
               ],
             },

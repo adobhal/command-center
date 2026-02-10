@@ -250,3 +250,135 @@ export const strategicMetrics = pgTable('strategic_metrics', {
   metadata: jsonb('metadata'),
   calculatedAt: timestamp('calculated_at').defaultNow().notNull(),
 });
+
+// ============================================================================
+// Growth Framework Tables
+// ============================================================================
+
+// Goal (metric, target, period, owner, tolerance)
+export const goals = pgTable('goals', {
+  id: text('id').primaryKey().$defaultFn(() => createId()),
+  metric: text('metric').notNull(),
+  metricType: text('metric_type').notNull(), // 'revenue', 'unit_volume', 'capacity', 'gross_margin', 'net_margin', 'headcount'
+  target: decimal('target', { precision: 19, scale: 4 }).notNull(),
+  actual: decimal('actual', { precision: 19, scale: 4 }),
+  period: text('period').notNull(), // 'weekly', 'monthly', 'quarterly'
+  periodStart: timestamp('period_start').notNull(),
+  periodEnd: timestamp('period_end').notNull(),
+  owner: text('owner'),
+  tolerance: decimal('tolerance', { precision: 5, scale: 2 }), // % variance allowed
+  status: text('status').default('active').notNull(), // 'on_track', 'at_risk', 'off_track'
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+// KSF (Key Success Factor)
+export const ksfs = pgTable('ksfs', {
+  id: text('id').primaryKey().$defaultFn(() => createId()),
+  name: text('name').notNull(),
+  definition: text('definition').notNull(),
+  leadingMetrics: jsonb('leading_metrics'), // string[]
+  category: text('category'), // 'quality', 'speed', 'cost', 'reliability', 'compliance'
+  targetValue: text('target_value'),
+  currentValue: text('current_value'),
+  processId: text('process_id'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+// Process (Primary Process)
+export const processes = pgTable('processes', {
+  id: text('id').primaryKey().$defaultFn(() => createId()),
+  name: text('name').notNull(),
+  description: text('description'),
+  stages: jsonb('stages').notNull(), // [{ name, timestamp, defectRate, handoffs }]
+  cycleTime: integer('cycle_time'), // hours/days
+  defectRate: decimal('defect_rate', { precision: 5, scale: 2 }),
+  throughput: decimal('throughput', { precision: 19, scale: 4 }),
+  unitEconomics: jsonb('unit_economics'), // { segment, costToServe, ... }
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+// Constraint (Top 5 Barriers to Growth)
+export const constraints = pgTable('constraints', {
+  id: text('id').primaryKey().$defaultFn(() => createId()),
+  name: text('name').notNull(),
+  type: text('type').notNull(), // 'capacity', 'capability', 'cash', 'compliance', 'culture'
+  severity: text('severity').notNull(), // 'low', 'medium', 'high', 'critical'
+  rank: integer('rank').notNull(),
+  owner: text('owner'),
+  eta: timestamp('eta'),
+  capitalRequired: decimal('capital_required', { precision: 19, scale: 4 }),
+  status: text('status').default('open').notNull(),
+  description: text('description'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+// Priority (Run/Build/Scan)
+export const priorities = pgTable('priorities', {
+  id: text('id').primaryKey().$defaultFn(() => createId()),
+  title: text('title').notNull(),
+  bucket: text('bucket').notNull(), // 'run', 'build', 'scan'
+  impact: text('impact').notNull(), // 'low', 'medium', 'high', 'critical'
+  effort: text('effort').notNull(), // 'low', 'medium', 'high'
+  dependencyRisk: text('dependency_risk'), // 'low', 'medium', 'high'
+  supportsKsf: boolean('supports_ksf').default(false).notNull(),
+  status: text('status').default('pending').notNull(),
+  owner: text('owner'),
+  rank: integer('rank').notNull(),
+  timeAllocated: integer('time_allocated'), // % of week
+  budgetAllocated: decimal('budget_allocated', { precision: 19, scale: 4 }),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+// Rhythm (Operating cadence)
+export const rhythms = pgTable('rhythms', {
+  id: text('id').primaryKey().$defaultFn(() => createId()),
+  name: text('name').notNull(),
+  cadence: text('cadence').notNull(), // 'daily', 'weekly', 'monthly', 'quarterly'
+  agendaTemplate: text('agenda_template'),
+  requiredInputs: jsonb('required_inputs'), // string[]
+  nextOccurrence: timestamp('next_occurrence'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+// Action (Weekly To-Do)
+export const actions = pgTable('actions', {
+  id: text('id').primaryKey().$defaultFn(() => createId()),
+  title: text('title').notNull(),
+  tag: text('tag').notNull(), // 'survival', 'important'
+  dueDate: timestamp('due_date').notNull(),
+  status: text('status').default('pending').notNull(), // 'pending', 'in_progress', 'done', 'blocked'
+  owner: text('owner'),
+  priority: integer('priority').default(0).notNull(),
+  measurable: boolean('measurable').default(true).notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+// Growth Asset (what scales)
+export const growthAssets = pgTable('growth_assets', {
+  id: text('id').primaryKey().$defaultFn(() => createId()),
+  name: text('name').notNull(),
+  type: text('type').notNull(), // 'people', 'process', 'trend', 'capability'
+  description: text('description'),
+  profitabilityNote: text('profitability_note'), // "easy ≠ profitable" warning
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+// Execution Pulse (commitments vs delivered)
+export const executionPulses = pgTable('execution_pulses', {
+  id: text('id').primaryKey().$defaultFn(() => createId()),
+  weekStart: timestamp('week_start').notNull(),
+  commitmentsMade: integer('commitments_made').default(0).notNull(),
+  commitmentsDelivered: integer('commitments_delivered').default(0).notNull(),
+  blockersAging: integer('blockers_aging').default(0).notNull(),
+  decisionQueue: jsonb('decision_queue'), // [{ title, owner, dueDate }]
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});

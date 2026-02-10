@@ -104,7 +104,7 @@ export class PLParser {
    * Parse data array into structured P&L data
    * Supports multi-year format where columns represent different years
    */
-  private parseData(data: any[][], filename: string, yearColumnIndex?: number): PLData {
+  parseData(data: any[][], filename: string, yearColumnIndex?: number): PLData {
     const plData: PLData = {
       period: this.extractPeriod(data),
       revenue: 0,

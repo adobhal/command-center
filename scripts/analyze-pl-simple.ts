@@ -18,7 +18,7 @@ async function analyzePL() {
     const workbook = XLSX.readFile(filePath);
     const sheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[sheetName];
-    const data = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: null });
+    const data = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: null }) as unknown[][];
 
     console.log(`Period: ${data[2]?.[0] || 'Unknown'}`);
     console.log(`Company: ${data[1]?.[0] || 'Unknown'}\n`);
@@ -204,7 +204,7 @@ async function analyzePL() {
     console.log(`\n💡 Total insights generated: ${allInsights.length}`);
     console.log(`   High-priority insights: ${allInsights.filter(i => i.priority >= 8).length}`);
     console.log(`\n📱 To view insights in the dashboard:`);
-    console.log(`   1. Upload the P&L file at: http://localhost:3000/analytics/pl-analysis`);
+    console.log(`   1. Upload the P&L file at: http://localhost:3000/analysis/pl-analysis`);
     console.log(`   2. Or view existing insights at: http://localhost:3000/dashboard`);
 
   } catch (error: any) {

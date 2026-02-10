@@ -191,7 +191,7 @@ export class SlackClient {
               type: 'plain_text',
               text: 'View Details',
             },
-            url: `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/reconciliation`,
+            url: `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/bookkeeping/reconciliation`,
             style: statusColor === 'danger' ? 'danger' : undefined,
           },
         ],

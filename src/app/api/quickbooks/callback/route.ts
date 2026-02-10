@@ -23,13 +23,13 @@ export async function GET(request: Request) {
 
     if (error) {
       return NextResponse.redirect(
-        new URL(`/quickbooks/connect?error=${encodeURIComponent(error)}`, request.url)
+        new URL(`/bookkeeping/quickbooks?error=${encodeURIComponent(error)}`, request.url)
       );
     }
 
     if (!code || !realmId) {
       return NextResponse.redirect(
-        new URL('/quickbooks/connect?error=missing_params', request.url)
+        new URL('/bookkeeping/quickbooks?error=missing_params', request.url)
       );
     }
 
@@ -39,7 +39,7 @@ export async function GET(request: Request) {
         const decodedState = JSON.parse(Buffer.from(state, 'base64').toString());
         if (decodedState.userId !== session.user.id) {
           return NextResponse.redirect(
-            new URL('/quickbooks/connect?error=invalid_state', request.url)
+            new URL('/bookkeeping/quickbooks?error=invalid_state', request.url)
           );
         }
       } catch (e) {
@@ -53,7 +53,7 @@ export async function GET(request: Request) {
 
     if (!clientId || !clientSecret) {
       return NextResponse.redirect(
-        new URL('/quickbooks/connect?error=not_configured', request.url)
+        new URL('/bookkeeping/quickbooks?error=not_configured', request.url)
       );
     }
 
@@ -110,11 +110,11 @@ export async function GET(request: Request) {
       });
     }
 
-    return NextResponse.redirect(new URL('/quickbooks/connect?success=true', request.url));
+    return NextResponse.redirect(new URL('/bookkeeping/quickbooks?success=true', request.url));
   } catch (error) {
     console.error('Error in QuickBooks callback:', error);
     return NextResponse.redirect(
-      new URL(`/quickbooks/connect?error=callback_failed`, request.url)
+      new URL(`/bookkeeping/quickbooks?error=callback_failed`, request.url)
     );
   }
 }

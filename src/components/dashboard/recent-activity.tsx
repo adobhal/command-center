@@ -23,9 +23,9 @@ const activityColors = {
 };
 
 const activityLinks: { [key: string]: string } = {
-  sync: '/quickbooks/connect',
-  upload: '/bank-statements/upload',
-  reconciliation: '/reconciliation',
+  sync: '/bookkeeping/quickbooks',
+  upload: '/bookkeeping/bank-statements',
+  reconciliation: '/bookkeeping/reconciliation',
   ai: '/dashboard#insights',
   automation: '/dashboard',
 };

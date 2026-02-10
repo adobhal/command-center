@@ -10,7 +10,7 @@ const pillars = [
     description: 'The Data Intelligence Engine that drives ROI decisions',
     icon: DollarSign,
     color: 'text-blue-600 dark:text-blue-400',
-    href: '/analytics/comprehensive',
+    href: '/analysis/comprehensive',
   },
   {
     title: 'Strategic Insights',
@@ -24,14 +24,14 @@ const pillars = [
     description: 'Maximum automation for operational efficiency',
     icon: Zap,
     color: 'text-yellow-600 dark:text-yellow-400',
-    href: '/quickbooks/connect',
+    href: '/bookkeeping/quickbooks',
   },
   {
     title: 'Operational Health',
     description: 'Real-time monitoring and performance metrics',
     icon: BarChart3,
     color: 'text-green-600 dark:text-green-400',
-    href: '/reconciliation',
+    href: '/bookkeeping/reconciliation',
   },
 ];
 
@@ -45,20 +45,9 @@ export function CorePillars() {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {pillars.map((pillar) => {
             const Icon = pillar.icon;
-            const PillarWrapper = pillar.href ? Link : 'div';
-            const wrapperProps = pillar.href
-              ? { href: pillar.href, className: 'block' }
-              : { className: 'block' };
-
             return (
-              <PillarWrapper key={pillar.title} {...wrapperProps}>
-                <div
-                  className={`flex items-start gap-4 rounded-lg border border-zinc-200 p-4 transition-all dark:border-zinc-800 ${
-                    pillar.href
-                      ? 'cursor-pointer hover:shadow-md hover:border-zinc-300 dark:hover:border-zinc-700'
-                      : ''
-                  }`}
-                >
+              <Link key={pillar.title} href={pillar.href} className="block">
+                <div className="flex items-start gap-4 rounded-lg border border-zinc-200 p-4 transition-all cursor-pointer hover:shadow-md hover:border-zinc-300 dark:border-zinc-800 dark:hover:border-zinc-700">
                   <div className={`${pillar.color} flex-shrink-0`}>
                     <Icon className="h-6 w-6" />
                   </div>
@@ -71,7 +60,7 @@ export function CorePillars() {
                     </p>
                   </div>
                 </div>
-              </PillarWrapper>
+              </Link>
             );
           })}
         </div>

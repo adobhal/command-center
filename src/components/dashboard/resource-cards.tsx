@@ -48,28 +48,28 @@ export function ResourceCards() {
       value: metrics?.transactions.toLocaleString() || '0',
       trend: 8.2, // TODO: Calculate from historical data
       trendLabel: 'vs last month',
-      href: '/quickbooks/connect',
+      href: '/bookkeeping/quickbooks',
     },
     {
       title: 'Reconciliations',
       value: metrics?.reconciliations.toLocaleString() || '0',
       trend: -2.1, // TODO: Calculate from historical data
       trendLabel: 'vs last month',
-      href: '/reconciliation',
+      href: '/bookkeeping/reconciliation',
     },
     {
       title: 'Bank Statements',
       value: metrics?.bankStatements.toLocaleString() || '0',
       trend: 0, // TODO: Calculate from historical data
       trendLabel: 'this month',
-      href: '/bank-statements/upload',
+      href: '/bookkeeping/bank-statements',
     },
     {
       title: 'Unmatched Items',
       value: metrics?.unmatchedItems.toLocaleString() || '0',
       trend: -15.3, // TODO: Calculate from historical data
       trendLabel: 'vs last week',
-      href: '/reconciliation',
+      href: '/bookkeeping/reconciliation',
     },
   ];
 

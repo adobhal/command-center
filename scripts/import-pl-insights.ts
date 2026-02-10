@@ -90,7 +90,7 @@ async function importPLInsights() {
             description: `${insight.description} [Year: ${year}]`,
             priority: insight.priority,
             actionable: !!insight.recommendation,
-            actionUrl: insight.recommendation ? '/analytics/pl-analysis' : undefined,
+            actionUrl: insight.recommendation ? '/analysis/pl-analysis' : undefined,
             confidence: '0.9',
             metadata: {
               plAnalysis: true,

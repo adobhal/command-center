@@ -44,7 +44,7 @@ export async function POST(request: Request) {
     const workbook = XLSX.read(buffer, { type: 'buffer' });
     const sheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[sheetName];
-    const data = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: null });
+    const data = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: null }) as unknown[][];
 
     const parser = new PLParser();
     const years = ['2020', '2021', '2022', '2023', '2024', '2025'];
@@ -70,14 +70,14 @@ export async function POST(request: Request) {
       const year = years[yearIdx - 1];
       
       // Extract data for this year
-      const yearData = data.map((row: any[]) => {
+      const yearData = data.map((row: unknown[]) => {
         const label = row[0];
         const value = row[yearIdx];
         return [label, value];
       });
 
       // Parse this year's data
-      const plData = await parser.parseData(yearData as any[][], `${file.name} - ${year}`, 1);
+      const plData = parser.parseData(yearData as any[][], `${file.name} - ${year}`, 1);
       
       // Generate insights
       const yearInsights = parser.generateInsights(plData);
@@ -107,7 +107,7 @@ export async function POST(request: Request) {
             description: `${insight.description} [Year: ${year}]`,
             priority: insight.priority,
             actionable: !!insight.recommendation,
-            actionUrl: insight.recommendation ? '/analytics/pl-analysis' : undefined,
+            actionUrl: insight.recommendation ? '/analysis/pl-analysis' : undefined,
             confidence: '0.9',
             metadata: {
               plAnalysis: true,

@@ -1,7 +1,6 @@
 'use client';
 
 import { Badge } from '@/components/ui/badge';
-import { Activity, CheckCircle2, AlertCircle, Clock } from 'lucide-react';
 import { useSystemStatus } from '@/hooks/use-system-status';
 
 export function SystemStatusBar() {
@@ -21,52 +20,25 @@ export function SystemStatusBar() {
     return 'bg-yellow-500';
   };
 
+  const allHealthy =
+    getStatusColor(systemStatus.aiStatus) === 'bg-green-500' &&
+    getStatusColor(systemStatus.automationStatus) === 'bg-green-500' &&
+    getStatusColor(systemStatus.quickbooksStatus) === 'bg-green-500';
+
   return (
-    <div className="border-b border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
-      <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6 lg:px-8">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="flex items-center gap-6">
-            <div className="flex items-center gap-2">
-              <Activity className="h-4 w-4 text-zinc-500" />
-              <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                {systemStatus.responseTime}ms
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4 text-green-500" />
-              <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                {systemStatus.uptime}%
-              </span>
-            </div>
+    <div className="border-b border-slate-200/80 bg-white/95 dark:border-slate-800 dark:bg-slate-950/95">
+      <div className="mx-auto max-w-7xl px-4 py-2 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-4 text-sm text-slate-600 dark:text-slate-400">
+            <span>{systemStatus.responseTime}ms</span>
+            <span>{systemStatus.uptime}% uptime</span>
             <Badge
               variant="outline"
-              className="flex items-center gap-1 border-green-500 text-green-700 dark:text-green-400"
+              className={`flex items-center gap-1.5 text-xs font-medium ${allHealthy ? 'border-slate-300 text-slate-700 dark:border-slate-600 dark:text-slate-300' : 'border-amber-400/60 text-amber-700 dark:text-amber-400'}`}
             >
-              <div className={`h-2 w-2 rounded-full ${getStatusColor(systemStatus.aiStatus)}`} />
-              AI Online
+              <div className={`h-1.5 w-1.5 rounded-full ${allHealthy ? 'bg-slate-500' : 'bg-amber-500'}`} />
+              {allHealthy ? 'All systems connected' : 'Check connections'}
             </Badge>
-            <Badge
-              variant="outline"
-              className="flex items-center gap-1 border-green-500 text-green-700 dark:text-green-400"
-            >
-              <div
-                className={`h-2 w-2 rounded-full ${getStatusColor(systemStatus.automationStatus)}`}
-              />
-              Automation Healthy
-            </Badge>
-            <Badge
-              variant="outline"
-              className="flex items-center gap-1 border-green-500 text-green-700 dark:text-green-400"
-            >
-              <div
-                className={`h-2 w-2 rounded-full ${getStatusColor(systemStatus.quickbooksStatus)}`}
-              />
-              QuickBooks Connected
-            </Badge>
-          </div>
-          <div className="flex items-center gap-2 text-sm text-zinc-500">
-            <Clock className="h-4 w-4" />
-            <span>System Active</span>
           </div>
         </div>
       </div>
