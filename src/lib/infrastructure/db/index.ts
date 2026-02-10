@@ -2,31 +2,35 @@ import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import * as schema from './schema';
 
-// Lazy initialization function
-function createDatabase() {
-  if (!process.env.DATABASE_URL) {
-    throw new Error('DATABASE_URL environment variable is not set');
-  }
+type DbInstance = ReturnType<typeof drizzle<typeof schema>>;
 
-  // Disable prefetch as it is not supported for "Transaction" pool mode
-  const connectionString = process.env.DATABASE_URL;
-  const client = postgres(connectionString, { prepare: false });
+function createDatabase(): DbInstance {
+  if (!process.env.DATABASE_URL) {
+    throw new Error('DATABASE_URL environment variable is not set. Add it in Vercel Project Settings → Environment Variables.');
+  }
+  const client = postgres(process.env.DATABASE_URL, { prepare: false });
   return drizzle(client, { schema });
 }
 
-// Create database instance - will throw if DATABASE_URL is not set at runtime
-// This is fine for build as Next.js will handle it
-let dbInstance: ReturnType<typeof createDatabase> | null = null;
+let dbInstance: DbInstance | null = null;
 
-export const db = (() => {
-  if (!dbInstance) {
-    dbInstance = createDatabase();
-  }
+function getDb(): DbInstance {
+  if (!dbInstance) dbInstance = createDatabase();
   return dbInstance;
-})();
+}
+
+// When DATABASE_URL is unset, export a proxy so the module loads without throwing.
+// This allows Vercel build to succeed before env vars are configured.
+// The proxy throws when db is actually used at runtime.
+export const db = process.env.DATABASE_URL
+  ? getDb()
+  : (new Proxy({} as DbInstance, {
+      get() {
+        throw new Error('DATABASE_URL is not set. Add it in Vercel Project Settings → Environment Variables.');
+      }
+    }) as DbInstance);
 
 // Export schema for use in migrations
 export { schema };
 
-// Export database type
-export type Database = ReturnType<typeof createDatabase>;
+export type Database = DbInstance;
